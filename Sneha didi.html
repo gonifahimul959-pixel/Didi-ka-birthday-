@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Sneha | Time Travel</title>
+    <style>
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background: #000; color: white;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        /* STAGE 1: THE START */
+        #apology-stage {
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            height: 100vh; width: 100vw;
+            text-align: center;
+            position: absolute; top: 0; left: 0;
+            z-index: 100; background: black;
+            transition: opacity 1s ease;
+        }
+
+        .btn-warp {
+            padding: 20px 40px; font-size: 1.2rem;
+            background: transparent; border: 2px solid #00f2ff;
+            color: #00f2ff; cursor: pointer;
+            box-shadow: 0 0 15px #00f2ff;
+            text-transform: uppercase; letter-spacing: 2px;
+            margin-top: 30px; border-radius: 5px;
+            font-weight: bold;
+        }
+
+        /* STAGE 2: VORTEX & PHOTOS */
+        #vortex-canvas {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: none; z-index: 5;
+        }
+
+        #photo-container {
+            position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 150; display: none;
+            width: 90vw; height: 75vh;
+            justify-content: center; align-items: center;
+        }
+
+        #photo-overlay {
+            max-width: 100%; max-height: 100%;
+            border: 10px solid white;
+            box-shadow: 0 0 50px rgba(255,255,255,0.4);
+            opacity: 0; transition: opacity 0.4s ease-in-out;
+        }
+
+        /* STAGE 3: ARRIVAL */
+        #landing-note {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            display: none; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 180; text-align: center;
+            opacity: 0; transition: opacity 1s ease;
+        }
+
+        .arrival-text {
+            font-size: 2.2rem; color: #fff;
+            text-shadow: 0 0 20px #00f2ff;
+            line-height: 1.5;
+        }
+
+        /* STAGE 4: THE LETTER */
+        #celebration-stage {
+            display: none; position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #090A0F;
+            z-index: 200; overflow-y: auto;
+            padding: 40px 20px; box-sizing: border-box;
+            text-align: center;
+        }
+
+        .letter-card {
+            position: relative;
+            max-width: 550px; margin: 40px auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 35px; border-radius: 20px;
+            color: #333; line-height: 1.8; text-align: left;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+        }
+
+        h1.bday-title {
+            color: #ff69b4; 
+            text-shadow: 0 0 15px rgba(255,105,180,0.5); 
+            font-size: 2.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="apology-stage">
+        <h1 style="font-size: 2.5rem; margin-bottom: 15px;">didi lets break time wuiiiiii.</h1>
+        <p style="opacity: 0.7; max-width: 80%; line-height: 1.6;">
+            me kuch zada he tension me tha and apka birthday bhul gya the sorry. <br>
+            chalo wapas time me piche jate hai.
+        </p>
+        <button id="start-btn" class="btn-warp">Time travel with me </button>
+    </div>
+
+    <canvas id="vortex-canvas"></canvas>
+    <div id="photo-container"><img id="photo-overlay" src="" alt="Memory"></div>
+
+    <div id="landing-note">
+        <h2 class="arrival-text">
+            Destination Reached:<br>
+            <span style="color: #00f2ff; font-size: 2.5rem;">24 February, 12:00 AM</span>
+        </h2>
+    </div>
+
+    <div id="celebration-stage">
+        <h1 class="bday-title">HAPPY BIRTHDAY SNEHA DIDIIIIII! 🎂</h1>
+        <div class="letter-card">
+            <p><strong>Pyaari didiiiiii</strong></p>
+            <p>Ik me 12 baje wish karna bhul gya isliye mene ye website be design kar dia tame travel yk :) </p>
+            <p>So as we travel back to time raat ke 12 baje hai abhi and we time tralelled wuiiiiii. So apne apna 23 photos dekh he lia and mera dimag me kuch aa nhi raha tha isliye ye banaya.</p>
+            <p>Im really sorry for being late me bohot zasa tension me tha and idk aab aur kaise apologise karu im really sorry. Pata nhi kab 3 saal bit gya yk humlog 2023 me mila tha and i didnt know that time pe ki mujhe ek itni achi behan milega. Im so glad to have you in my life didi. whenever you need me just text ya call me and mere sath bhi kabhi ek photo khich lo. Once again happy birthday and party dena. I love you sooo much didi.</p>
+            <p style="margin-top: 30px;">
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('start-btn');
+        const audio = document.getElementById('bg-music');
+        const canvas = document.getElementById('vortex-canvas');
+        const ctx = canvas.getContext('2d');
+        const photo = document.getElementById('photo-overlay');
+        const images = Array.from({length: 23}, (_, i) => `${i + 1}.jpg`);
+
+        btn.addEventListener('click', startTimeTravel);
+
+        let stars = [];
+        let warpSpeed = 0.5;
+        let animationActive = false;
+
+        function initStars() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            for(let i=0; i<300; i++) {
+                stars.push({x: Math.random()*canvas.width-canvas.width/2, y: Math.random()*canvas.height-canvas.height/2, z: Math.random()*canvas.width});
+            }
+        }
+
+        function drawStars() {
+            if(!animationActive) return;
+            ctx.fillStyle = "black"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.save(); ctx.translate(canvas.width/2, canvas.height/2);
+            stars.forEach(s => {
+                s.z -= warpSpeed; if(s.z <= 0) s.z = canvas.width;
+                let sx = s.x * (canvas.width / s.z); let sy = s.y * (canvas.width / s.z);
+                let size = (1 - s.z / canvas.width) * 3;
+                ctx.fillStyle = "white"; ctx.beginPath(); ctx.arc(sx, sy, size, 0, Math.PI*2); ctx.fill();
+            });
+            ctx.restore(); requestAnimationFrame(drawStars);
+        }
+
+        async function startTimeTravel() {
+            if(animationActive) return;
+            
+            // This starts the local music.mp3
+            audio.play().catch(err => console.log("Audio failed to play. Make sure music.mp3 is in the folder!"));
+            
+            animationActive = true;
+            document.getElementById('apology-stage').style.opacity = '0';
+            setTimeout(() => { document.getElementById('apology-stage').style.display = 'none'; }, 1000);
+            
+            canvas.style.display = 'block';
+            document.getElementById('photo-container').style.display = 'flex';
+            initStars(); drawStars();
+
+            for (let i = 0; i < images.length; i++) {
+                photo.src = images[i];
+                warpSpeed += 0.4;
+                photo.style.opacity = '1';
+                await new Promise(r => setTimeout(r, 1200));
+                photo.style.opacity = '0';
+                await new Promise(r => setTimeout(r, 400));
+            }
+
+            animationActive = false;
+            canvas.style.display = 'none';
+            document.getElementById('photo-container').style.display = 'none';
+            
+            const note = document.getElementById('landing-note');
+            note.style.display = 'flex';
+            setTimeout(() => { note.style.opacity = '1'; }, 100);
+            await new Promise(r => setTimeout(r, 4500));
+            
+            note.style.opacity = '0';
+            setTimeout(() => {
+                note.style.display = 'none';
+                document.getElementById('celebration-stage').style.display = 'block';
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
